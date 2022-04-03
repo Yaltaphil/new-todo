@@ -1,30 +1,73 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+    <nav>
+        <!-- <router-link to="/">TaskList</router-link> | -->
+        <!-- <router-link :to="{ name: 'TaskItem' }">Add task</router-link> -->
+    </nav>
+    <h1>Your list</h1>
+
+    <ul>
+        <TaskItem
+            v-for="item in tasksToDisplay"
+            :key="item.id"
+            :item="item"
+        />
+    </ul>
+    <h2>router</h2>
+    <router-view/>
+    <div>
+        <span>{{ counter }} item left</span>
+        <span>
+            <input
+                id="all-tasks"
+                v-model="filter"
+                type="radio"
+                value="all"
+            />All</span
+        >
+        <span>
+            <input
+                id="active-tasks"
+                v-model="filter"
+                type="radio"
+                value="active"
+            />Active</span
+        >
+        <span>
+            <input
+                id="completed-tasks"
+                v-model="filter"
+                type="radio"
+                value="completed"
+            />Completed</span
+        >
+
+        <span> <button>Clear completed</button></span>
+    </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts" setup>
+import { useStore } from 'vuex'
+import { computed, ref } from '@vue/reactivity'
+import Task from '@/models/task'
+import filters from '@/models/filters'
+import TaskItem from '@/components/TaskItem.vue'
 
-nav {
-  padding: 30px;
+const store = useStore()
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+const filter = ref(filters.all)
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+const counter = computed(() => store.getters.tasksCount)
+
+const tasksToDisplay = computed(() => {
+  switch (filter.value) {
+    case filters.all:
+      return store.state.tasks
+    case filters.active:
+      return store.state.tasks.filter(
+        (item: Task) => !item.completed,
+      )
+    case filters.completed:
+      return store.state.tasks.filter((item: Task) => item.completed)
   }
-}
-</style>
+})
+</script>
