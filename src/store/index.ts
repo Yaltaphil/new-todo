@@ -20,23 +20,27 @@ export default createStore({
     },
 
     mutations: {
-        setFilter(state, value) {
+        SET_FILTER(state, value) {
             state.filter = value;
         },
 
-        setTasks(state, value = []) {
+        SET_TASKS(state, value = []) {
             state.tasks = value;
+        },
+
+        INVERT_TASK_STATUS(state, idx) {
+            state.tasks[idx].completed = !state.tasks[idx].completed;
         },
     },
 
     actions: {
         setFilter({ commit }, value) {
-            commit("setFilter", value);
+            commit("SET_FILTER", value);
         },
 
         async loadTasks({ commit }) {
             const local = localStorage.getItem("newToDoList");
-            local && commit("setTasks", JSON.parse(local));
+            local && commit("SET_TASKS", JSON.parse(local));
         },
 
         async saveTasks(context) {
@@ -45,6 +49,21 @@ export default createStore({
                 JSON.stringify(context.state.tasks)
             );
         },
-    },
 
+        addTask({ commit }, value) {
+            commit("SET_TASKS", value);
+        },
+
+        changeTaskStatus(context, id: number) {
+            const idx = context.state.tasks.findIndex((item) => item.id === id);
+            ~idx && context.commit("INVERT_TASK_STATUS", idx);
+        },
+
+        clearCompleted({ commit, state }) {
+            commit(
+                "SET_TASKS",
+                state.tasks.filter((item) => !item.completed)
+            );
+        },
+    },
 });

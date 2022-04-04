@@ -1,11 +1,11 @@
 <template>
     <main>
-        <h1>Your list</h1>
+        <h1>Your task list</h1>
 
         <router-view />
 
         <div>
-            <span>{{ counter }} item left</span>
+            <span>Total: {{ counter }} items</span>
             <span> <input v-model="filter" type="radio" value="all" />All</span>
             <span>
                 <input
@@ -22,7 +22,9 @@
                 />Completed</span
             >
             {{ filter }}
-            <span> <button>Clear completed</button></span>
+            <span>
+                <button @click="clearCompleted">Clear completed</button>
+            </span>
         </div>
     </main>
 </template>
@@ -43,4 +45,8 @@
     });
 
     onMounted(async () => await store.dispatch("loadTasks"));
+
+    function clearCompleted() {
+        store.dispatch("clearCompleted");
+    }
 </script>

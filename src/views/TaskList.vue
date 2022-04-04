@@ -1,12 +1,18 @@
 <template>
     <section>
+        <router-link to="add" custom v-slot="{ navigate }">
+            <button @click="navigate">+ Add task</button>
+        </router-link>
+
         <ul>
             <TaskItem
                 v-for="item in tasksToDisplay"
                 :item="item"
                 :key="item.id"
+                @change-status="changeTaskStatus(item.id)"
             />
         </ul>
+
         <router-view></router-view>
     </section>
 </template>
@@ -32,4 +38,8 @@
                 return store.state.tasks.filter((item: Task) => item.completed);
         }
     });
+
+    function changeTaskStatus(id: number) {
+        store.dispatch("changeTaskStatus", id);
+    }
 </script>

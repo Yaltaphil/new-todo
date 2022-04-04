@@ -7,16 +7,15 @@ const routes: Array<RouteRecordRaw> = [
         path: "/",
         name: "TaskList",
         component: TaskList,
-        children: [
-            {
-                path: "add",
-                component: AddTask,
-            },
-            {
-                path: "edit",
-                component: AddTask,
-            },
-        ],
+    },
+    {
+        path: "/add",
+        name: "AddTask",
+        component: AddTask,
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        component: TaskList
     },
 ];
 
