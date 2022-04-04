@@ -1,7 +1,14 @@
 <template>
-    <li @click="changeStatus" :class="{ completed: props.item.completed }">
-        <span>{{ props.item.id }} ----</span>
-        <span>{{ props.item.title }}</span>
+    <li @click="changeStatus" class="text-lg hover:cursor-pointer hover:bg-teal-100">
+        <span v-if="props.item.completed" class="text-green-700 font-bold p-3"
+            >&checkmark;</span
+        >
+        <span v-else class="font-semibold p-3">&#9900;</span>
+
+        <span :class="{ 'line-through': props.item.completed }"
+        class="font-semibold text-zink-900"
+            >{{ props.item.title }}
+        </span>
     </li>
 </template>
 
@@ -17,9 +24,3 @@
         emit("changeStatus");
     }
 </script>
-
-<style lang="scss" scoped>
-    .completed {
-        text-decoration: line-through;
-    }
-</style>

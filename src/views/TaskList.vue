@@ -1,19 +1,26 @@
 <template>
-    <section>
+    <section class="py-5">
         <router-link to="add" custom v-slot="{ navigate }">
-            <button @click="navigate">+ Add task</button>
+            <button
+                @click="navigate"
+                class="bg-green-200 py-2 px-5 rounded border-2 hover:bg-green-400 font-semibold"
+            >
+                + Add task
+            </button>
         </router-link>
 
-        <ul>
+        <ul class="py-5 divide-y divide-blue-100" v-if="tasksToDisplay.length">
             <TaskItem
                 v-for="item in tasksToDisplay"
                 :item="item"
                 :key="item.id"
                 @change-status="changeTaskStatus(item.id)"
+                class="py-2"
             />
         </ul>
-
-        <router-view></router-view>
+        <div class="text-center text-sm text-gray-500 italic my-10">
+            {{ tasksToDisplay.length }} items matching
+        </div>
     </section>
 </template>
 
@@ -39,7 +46,8 @@
         }
     });
 
-    function changeTaskStatus(id: number) {
+    async function changeTaskStatus(id: number) {
         store.dispatch("changeTaskStatus", id);
+        await store.dispatch("saveTasks");
     }
 </script>

@@ -17,6 +17,10 @@ export default createStore({
         activeFilter(state) {
             return state.filter;
         },
+
+        completedTasksHere(state) {
+            return state.tasks.some((item) => item.completed);
+        },
     },
 
     mutations: {

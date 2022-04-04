@@ -1,15 +1,22 @@
 <template>
-    <div>
-        <span> New task: </span>
+    <div class="my-5 py-5">
+        <span class="px-1 font-semibold"> New task: </span>
 
         <input
             type="text"
-            v-model="title"
+            v-model.trim="title"
             @keyup.enter="addTask"
             placeholder="type here"
+            autofocus
+            class="placeholder:pl-2 outline-0"
         />
 
-        <button @click="addTask">Add</button>
+        <button
+            @click="addTask"
+            class="bg-green-200 px-8 rounded border-2 hover:bg-green-400 font-semibold"
+        >
+            Add
+        </button>
     </div>
 </template>
 
@@ -22,13 +29,18 @@
 
     const title = ref("");
 
-    function addTask() {
-        const item = {
-            id: Date.now(),
-            title: title.value,
-            completed: false,
-        };
-        store.dispatch("addTask", [...store.state.tasks, item]);
-        router.push("/");
+    async function addTask() {
+        if (title.value) {
+            const item = {
+                id: Date.now(),
+                title: title.value,
+                completed: false,
+            };
+
+            await store.dispatch("addTask", [...store.state.tasks, item]);
+            await store.dispatch("saveTasks");
+
+            router.push("/");
+        }
     }
 </script>
