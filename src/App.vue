@@ -17,6 +17,9 @@
             отдельный роут на /add task <br />
             все данные в vuex store <br />
             выгрузка загрузка из localstore в качестве бэка <br />
+            <a class="text-red-700" href="https://github.com/Yaltaphil/new-todo"
+                >https://github.com/Yaltaphil/new-todo</a
+            >
         </div>
 
         <h1 class="text-3xl font-bold py-5 text-center">TO DO</h1>
