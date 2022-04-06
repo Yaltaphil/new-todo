@@ -10,15 +10,11 @@ export default createStore({
     },
 
     getters: {
-        tasksCount(state) {
+        tasksCount(state): number {
             return state.tasks.length;
         },
 
-        activeFilter(state) {
-            return state.filter;
-        },
-
-        completedTasksHere(state) {
+        haveCompletedTasks(state): boolean {
             return state.tasks.some((item) => item.completed);
         },
     },
@@ -38,24 +34,24 @@ export default createStore({
     },
 
     actions: {
-        setFilter({ commit }, value) {
-            commit("SET_FILTER", value);
+        setFilter({ commit }, payload) {
+            commit("SET_FILTER", payload);
         },
 
-        async loadTasks({ commit }) {
+        loadTasks({ commit }) {
             const local = localStorage.getItem("newToDoList");
             local && commit("SET_TASKS", JSON.parse(local));
         },
 
-        async saveTasks(context) {
+        saveTasks(context) {
             localStorage.setItem(
                 "newToDoList",
                 JSON.stringify(context.state.tasks)
             );
         },
 
-        addTask({ commit }, value) {
-            commit("SET_TASKS", value);
+        addTask({ commit }, payload) {
+            commit("SET_TASKS", payload);
         },
 
         changeTaskStatus(context, id: number) {
