@@ -1,12 +1,16 @@
 <template>
-    <li @click="changeStatus" class="text-lg hover:cursor-pointer hover:bg-teal-100">
+    <li
+        @click="changeStatus"
+        class="text-lg hover:cursor-pointer hover:bg-teal-100"
+    >
         <span v-if="props.item.completed" class="text-green-700 font-bold p-3"
             >&checkmark;</span
         >
         <span v-else class="font-semibold p-3">&#9900;</span>
 
-        <span :class="{ 'line-through': props.item.completed }"
-        class="font-semibold text-zink-900"
+        <span
+            :class="{ 'line-through': props.item.completed }"
+            class="font-semibold text-zink-900"
             >{{ props.item.title }}
         </span>
     </li>
@@ -20,7 +24,7 @@
 
     const emit = defineEmits(["changeStatus"]);
 
-    function changeStatus() {
+    function changeStatus(): void {
         emit("changeStatus");
     }
 </script>

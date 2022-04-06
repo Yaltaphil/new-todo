@@ -28,7 +28,9 @@
         <router-view />
 
         <nav class="p-2 mt-5 flex justify-between">
-            <div>Total: {{ counter }} items</div>
+            <div>
+                Items: {{ getTasksToDisplayCount }} of {{ getTasksCount }}
+            </div>
             <div class="flex space-x-5">
                 <span>
                     <input
@@ -57,8 +59,8 @@
             </div>
             <div>
                 <button
-                    @click="clearCompleted"
-                    :disabled="!haveCompletedTasks"
+                    @click="clearCompletedTasks"
+                    :disabled="!isCompletedTasks"
                     class="bg-red-100 px-5 py-1 rounded border disabled:bg-gray-100 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
                 >
                     Clear completed tasks
@@ -76,16 +78,21 @@
 
     const store = useStore();
 
-    const activeFilter = ref(store.state.filter);
+    const activeFilter = ref(store.getters.getTaskFilter);
 
-    const counter = computed(() => store.getters.tasksCount);
-    const haveCompletedTasks = computed(() => store.getters.haveCompletedTasks);
+    const getTasksCount = computed(() => store.getters.getTasksCount);
+    const getTasksToDisplayCount = computed(
+        () => store.getters.getTasksToDisplayCount
+    );
+    const isCompletedTasks = computed(
+        () => store.getters.isCompletedTasksPresent
+    );
 
     watch(activeFilter, (newFilter) => {
         store.dispatch("setFilter", newFilter);
     });
 
-    onMounted(async () => {
+    onMounted(() => {
         store.dispatch("loadTasks");
         window.addEventListener("keypress", (e) => {
             if (e.key === "Enter") {
@@ -94,8 +101,7 @@
         });
     });
 
-    function clearCompleted() {
+    function clearCompletedTasks(): void {
         store.dispatch("clearCompleted");
-        store.dispatch("saveTasks");
     }
 </script>

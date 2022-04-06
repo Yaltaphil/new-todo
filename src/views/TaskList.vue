@@ -8,18 +8,17 @@
                 + Add task
             </button>
         </router-link>
-
-        <ul class="py-5 divide-y divide-blue-100" v-if="tasksToDisplay.length">
+        <ul v-if="getTasksToDisplayCount" class="py-5 divide-y divide-blue-100">
             <TaskItem
-                v-for="item in tasksToDisplay"
+                v-for="item in getTasksToDisplay"
                 :item="item"
                 :key="item.id"
                 @change-status="changeTaskStatus(item.id)"
                 class="py-2"
             />
         </ul>
-        <div class="text-center text-sm text-gray-500 italic my-10">
-            {{ tasksToDisplay.length }} items matching
+        <div v-else class="text-center text-sm text-gray-500 italic my-10">
+            No items found ...
         </div>
     </section>
 </template>
@@ -28,26 +27,15 @@
     import TaskItem from "@/components/TaskItem.vue";
     import { useStore } from "vuex";
     import { computed } from "@vue/reactivity";
-    import Task from "@/models/task";
-    import Show from "@/models/filters";
 
     const store = useStore();
 
-    const tasksToDisplay = computed(() => {
-        switch (store.state.filter) {
-            case Show.all:
-                return store.state.tasks;
-            case Show.active:
-                return store.state.tasks.filter(
-                    (item: Task) => !item.completed
-                );
-            case Show.completed:
-                return store.state.tasks.filter((item: Task) => item.completed);
-        }
-    });
+    const getTasksToDisplay = computed(() => store.getters.getTasksToDisplay);
+    const getTasksToDisplayCount = computed(
+        () => store.getters.getTasksToDisplayCount
+    );
 
-    async function changeTaskStatus(id: number) {
+    function changeTaskStatus(id: number): void {
         store.dispatch("changeTaskStatus", id);
-        await store.dispatch("saveTasks");
     }
 </script>

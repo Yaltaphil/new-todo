@@ -1,21 +1,37 @@
 import { createStore } from "vuex";
+import state from "./state";
 import Task from "@/models/task";
-import Show from "@/models/filters";
+import Filter from "@/models/filters";
 
 export default createStore({
-    state: {
-        tasks: [] as Array<Task>,
-
-        filter: Show.all,
-    },
+    state,
 
     getters: {
-        tasksCount(state): number {
+        getTaskFilter(state): Filter {
+            return state.filter;
+        },
+
+        getTasksCount(state): number {
             return state.tasks.length;
         },
 
-        haveCompletedTasks(state): boolean {
+        isCompletedTasksPresent(state): boolean {
             return state.tasks.some((item) => item.completed);
+        },
+
+        getTasksToDisplay(state): Task[] {
+            switch (state.filter) {
+                case Filter.all:
+                    return state.tasks;
+                case Filter.active:
+                    return state.tasks.filter((item: Task) => !item.completed);
+                case Filter.completed:
+                    return state.tasks.filter((item: Task) => item.completed);
+            }
+        },
+
+        getTasksToDisplayCount(state, getters): number {
+            return getters.getTasksToDisplay.length;
         },
     },
 
@@ -28,7 +44,7 @@ export default createStore({
             state.tasks = value;
         },
 
-        INVERT_TASK_STATUS(state, idx) {
+        SET_TASK_STATUS(state, idx) {
             state.tasks[idx].completed = !state.tasks[idx].completed;
         },
     },
@@ -50,20 +66,23 @@ export default createStore({
             );
         },
 
-        addTask({ commit }, payload) {
+        setTasks({ commit, dispatch }, payload) {
             commit("SET_TASKS", payload);
+            dispatch("saveTasks");
         },
 
-        changeTaskStatus(context, id: number) {
-            const idx = context.state.tasks.findIndex((item) => item.id === id);
-            ~idx && context.commit("INVERT_TASK_STATUS", idx);
+        changeTaskStatus({ commit, dispatch, state }, id: number) {
+            const idx = state.tasks.findIndex((item) => item.id === id);
+            ~idx && commit("SET_TASK_STATUS", idx);
+            dispatch("saveTasks");
         },
 
-        clearCompleted({ commit, state }) {
+        clearCompleted({ commit, dispatch, state }) {
             commit(
                 "SET_TASKS",
                 state.tasks.filter((item) => !item.completed)
             );
+            dispatch("saveTasks");
         },
     },
 });

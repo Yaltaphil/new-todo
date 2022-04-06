@@ -4,7 +4,7 @@
 
         <input
             type="text"
-            v-model.trim="title"
+            v-model.trim.lazy="title"
             @keyup.enter="addTask"
             placeholder="type here"
             autofocus
@@ -29,17 +29,16 @@
 
     const title = ref("");
 
-    async function addTask() {
+    function addTask() {
         if (title.value) {
-            const item = {
-                id: Date.now(),
-                title: title.value,
-                completed: false,
-            };
-
-            await store.dispatch("addTask", [...store.state.tasks, item]);
-            await store.dispatch("saveTasks");
-
+            store.dispatch("setTasks", [
+                ...store.state.tasks,
+                {
+                    id: Date.now(),
+                    title: title.value,
+                    completed: false,
+                },
+            ]);
             router.push("/");
         }
     }
