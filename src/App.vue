@@ -81,8 +81,8 @@
     const counter = computed(() => store.getters.tasksCount);
     const haveCompletedTasks = computed(() => store.getters.haveCompletedTasks);
 
-    watch(activeFilter, (filter) => {
-        store.dispatch("setFilter", filter);
+    watch(activeFilter, (newFilter) => {
+        store.dispatch("setFilter", newFilter);
     });
 
     onMounted(async () => {
