@@ -3,6 +3,7 @@
         <span class="px-1 font-semibold"> New task: </span>
 
         <input
+            ref="input"
             type="text"
             v-model.trim.lazy="title"
             @keyup.enter="addTask"
@@ -22,11 +23,12 @@
 
 <script setup lang="ts">
     import { useStore } from "vuex";
-    import { ref } from "vue";
+    import { onMounted, ref } from "vue";
     import router from "@/router";
 
     const store = useStore();
 
+    const input = ref<null | { focus: () => null }>(null);
     const title = ref("");
 
     function addTask() {
@@ -42,4 +44,8 @@
             router.push("/");
         }
     }
+
+    onMounted(() => {
+        input.value?.focus();
+    });
 </script>

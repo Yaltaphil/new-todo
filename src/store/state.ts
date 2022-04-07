@@ -1,7 +1,12 @@
 import Task from "@/models/task";
 import Filter from "@/models/filters";
 
-export default () => ({
-    tasks: [] as Array<Task>,
+export interface State {
+    tasks: Task[];
+    filter: Filter;
+}
+
+export const state: State = {
+    tasks: [],
     filter: Filter.all,
-});
+};
