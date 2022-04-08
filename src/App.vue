@@ -73,7 +73,7 @@
 <script lang="ts" setup>
     import { useStore } from "vuex";
     import { computed, ref } from "@vue/reactivity";
-    import { onMounted, watch } from "vue";
+    import { onMounted, onUnmounted, watch } from "vue";
     import router from "./router";
 
     const store = useStore();
@@ -94,12 +94,16 @@
 
     onMounted(() => {
         store.dispatch("loadTasks");
-        window.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                router.push("/add");
-            }
-        });
+        window.addEventListener("keypress", handleEnter);
     });
+
+    onUnmounted(() => removeEventListener("keypress", handleEnter));
+
+    function handleEnter(event: KeyboardEvent): void {
+        if (event.key === "Enter") {
+            router.push("/add");
+        }
+    }
 
     function clearCompletedTasks(): void {
         store.dispatch("clearCompleted");

@@ -8,8 +8,8 @@
             v-model.trim.lazy="title"
             @keyup.enter="addTask"
             placeholder="type here"
-            autofocus
             class="placeholder:pl-2 outline-0"
+            v-focus
         />
 
         <button
@@ -23,13 +23,18 @@
 
 <script setup lang="ts">
     import { useStore } from "vuex";
-    import { onMounted, ref } from "vue";
+    import { ref, VueElement } from "vue";
     import router from "@/router";
 
     const store = useStore();
 
-    const input = ref<null | { focus: () => null }>(null);
+    // const input = ref<null | { focus: () => null }>(null);
+
     const title = ref("");
+
+    const vFocus = {
+        mounted: (el: VueElement) => el.focus(),
+    };
 
     function addTask() {
         if (title.value) {
@@ -45,7 +50,7 @@
         }
     }
 
-    onMounted(() => {
-        input.value?.focus();
-    });
+    // onMounted(() => {
+    //     input.value?.focus();
+    // });
 </script>
